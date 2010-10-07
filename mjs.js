@@ -444,9 +444,10 @@ if (MJS_FLOAT_ARRAY_TYPE == Array) {
 
     M4x4.clone = function M4x4_clone(m) {
         //MathUtils_assert(m.length == 16, "m.length == 16");
-        return new [m[0], m[1], m[2], m[3],
-                    m[4], m[5], m[6], m[7],
-                    m[8], m[9], m[10], m[11]];
+        return [m[0],  m[1],  m[2],  m[3],
+                m[4],  m[5],  m[6],  m[7],
+                m[8],  m[9],  m[10], m[11],
+                m[12], m[13], m[14], m[15]];
     };
 } else {
     M4x4.I = new MJS_FLOAT_ARRAY_TYPE([1.0, 0.0, 0.0, 0.0,
