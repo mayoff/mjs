@@ -1196,7 +1196,7 @@ M4x4.translate3 = function M4x4_translate3 (x, y, z, m, r) {
     var m11 = m[0], m21 = m[1], m31 = m[2], m41 = m[3];
     var m12 = m[4], m22 = m[5], m32 = m[6], m42 = m[7];
     var m13 = m[8], m23 = m[9], m33 = m[10], m43 = m[11];
-    var m14 = m[12], m24 = m[13], m34 = m[14], m44 = m[15],
+    var m14 = m[12], m24 = m[13], m34 = m[14], m44 = m[15];
 
     r[0] = m11;
     r[1] = m21;
