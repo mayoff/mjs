@@ -739,7 +739,7 @@ M4x4.makeOrtho = function M4x4_makeOrtho (left, right, bottom, top, znear, zfar,
     r[12] = -(right+left)/(right-left);
     r[13] = -(top+bottom)/(top-bottom);
     r[14] = -(zfar+znear)/(zfar-znear);
-    r[15] = 0;
+    r[15] = 1;
 
     return r;
 };
