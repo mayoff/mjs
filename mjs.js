@@ -69,7 +69,7 @@ catch (x) {
 const MJS_FLOAT_ARRAY_TYPE = WebGLFloatArray;
 //const MJS_FLOAT_ARRAY_TYPE = Float32Array;
 //const MJS_FLOAT_ARRAY_TYPE = Float64Array;
-const MJS_FLOAT_ARRAY_TYPE = Array;
+//const MJS_FLOAT_ARRAY_TYPE = Array;
 
 if (MJS_DO_ASSERT) {
 function MathUtils_assert(cond, msg) {
