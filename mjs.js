@@ -48,14 +48,6 @@ const MJS_VERSION = 0x000000;
  */
 const MJS_DO_ASSERT = true;
 
-// Some hacks for running in both the shell and browser,
-// and for supporting F32 and WebGLFloat arrays
-try { WebGLFloatArray; }
-catch (x) {
-    try { WebGLFloatArray = Float32Array; }
-    catch (x) { WebGLFloatArray = Array; }
-}
-
 /*
  * Constant: MJS_FLOAT_ARRAY_TYPE
  *
@@ -66,10 +58,14 @@ catch (x) {
  * MJS_FLOAT_ARRAY_TYPE.  Also, the builtin constants such as (M4x4.I)
  * will be of this type.
  */
-const MJS_FLOAT_ARRAY_TYPE = WebGLFloatArray;
-//const MJS_FLOAT_ARRAY_TYPE = Float32Array;
-//const MJS_FLOAT_ARRAY_TYPE = Float64Array;
-//const MJS_FLOAT_ARRAY_TYPE = Array;
+// Some hacks for running in both the shell and browser,
+// and for supporting F32 and WebGLFloat arrays
+const MJS_FLOAT_ARRAY_TYPE = (function() {
+    var type = Array;
+    try { type = WebGLFloatArray; } catch (e) { }
+    try { type = Float32Array; } catch (e) { }
+    return type;
+})();
 
 if (MJS_DO_ASSERT) {
 function MathUtils_assert(cond, msg) {
@@ -789,8 +785,6 @@ M4x4.makeOrtho2D = function M4x4_makeOrtho2D (left, right, bottom, top, r) {
  *   Otherwise, returns a new 4x4 matrix with the result.
  */
 
-// Replaced stock M4x4.mul with the one from http://code.google.com/p/webgl-mjs/issues/detail?id=7
-// which allows a === r and/or b === r.
 M4x4.mul = function M4x4_mul(a, b, r) {
     //MathUtils_assert(a.length == 16, "a.length == 16");
     //MathUtils_assert(b.length == 16, "b.length == 16");
