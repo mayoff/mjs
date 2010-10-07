@@ -1194,7 +1194,7 @@ M4x4.makeLookAt = function M4x4_makeLookAt (eye, center, up, r) {
     tm2[0] = 1; tm2[1] = 0; tm2[2] = 0; tm2[3] = 0;
     tm2[4] = 0; tm2[5] = 1; tm2[6] = 0; tm2[7] = 0;
     tm2[8] = 0; tm2[9] = 0; tm2[10] = 1; tm2[3] = 0;
-    tm2[0] = -eye[0]; tm2[1] = -eye[1]; tm2[2] = -eye[2]; tm2[3] = 0;
+    tm2[12] = -eye[0]; tm2[13] = -eye[1]; tm2[14] = -eye[2]; tm2[15] = 1;
 
     if (r == undefined)
         r = new MJS_FLOAT_ARRAY_TYPE(16);
