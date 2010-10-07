@@ -785,95 +785,41 @@ M4x4.makeOrtho2D = function M4x4_makeOrtho2D (left, right, bottom, top, r) {
  *   If r is specified, returns r after performing the operation.
  *   Otherwise, returns a new 4x4 matrix with the result.
  */
+
+// Replaced stock M4x4.mul with the one from http://code.google.com/p/webgl-mjs/issues/detail?id=7
+// which allows a === r and/or b === r.
 M4x4.mul = function M4x4_mul(a, b, r) {
     //MathUtils_assert(a.length == 16, "a.length == 16");
     //MathUtils_assert(b.length == 16, "b.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
-    //MathUtils_assert(a != r && b != r, "a != r && b != r");
 
-    if (r == undefined)
+    if (r === undefined)
         r = new MJS_FLOAT_ARRAY_TYPE(16);
+    var a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
+    var a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7];
+    var a8 = a[8], a9 = a[9], a10 = a[10], a11 = a[11];
+    var a12 = a[12], a13 = a[13], a14 = a[14], a15 = a[15];
+    var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
+    var b4 = b[4], b5 = b[5], b6 = b[6], b7 = b[7];
+    var b8 = b[8], b9 = b[9], b10 = b[10], b11 = b[11];
+    var b12 = b[12], b13 = b[13], b14 = b[14], b15 = b[15];
 
-    r[0] =
-        b[0] * a[0] +
-        b[0+1] * a[4] +
-        b[0+2] * a[8] +
-        b[0+3] * a[12];
-    r[0+1] =
-        b[0] * a[1] +
-        b[0+1] * a[5] +
-        b[0+2] * a[9] +
-        b[0+3] * a[13];
-    r[0+2] =
-        b[0] * a[2] +
-        b[0+1] * a[6] +
-        b[0+2] * a[10] +
-        b[0+3] * a[14];
-    r[0+3] =
-        b[0] * a[3] +
-        b[0+1] * a[7] +
-        b[0+2] * a[11] +
-        b[0+3] * a[15];
-    r[4] =
-        b[4] * a[0] +
-        b[4+1] * a[4] +
-        b[4+2] * a[8] +
-        b[4+3] * a[12];
-    r[4+1] =
-        b[4] * a[1] +
-        b[4+1] * a[5] +
-        b[4+2] * a[9] +
-        b[4+3] * a[13];
-    r[4+2] =
-        b[4] * a[2] +
-        b[4+1] * a[6] +
-        b[4+2] * a[10] +
-        b[4+3] * a[14];
-    r[4+3] =
-        b[4] * a[3] +
-        b[4+1] * a[7] +
-        b[4+2] * a[11] +
-        b[4+3] * a[15];
-    r[8] =
-        b[8] * a[0] +
-        b[8+1] * a[4] +
-        b[8+2] * a[8] +
-        b[8+3] * a[12];
-    r[8+1] =
-        b[8] * a[1] +
-        b[8+1] * a[5] +
-        b[8+2] * a[9] +
-        b[8+3] * a[13];
-    r[8+2] =
-        b[8] * a[2] +
-        b[8+1] * a[6] +
-        b[8+2] * a[10] +
-        b[8+3] * a[14];
-    r[8+3] =
-        b[8] * a[3] +
-        b[8+1] * a[7] +
-        b[8+2] * a[11] +
-        b[8+3] * a[15];
-    r[12] =
-        b[12] * a[0] +
-        b[12+1] * a[4] +
-        b[12+2] * a[8] +
-        b[12+3] * a[12];
-    r[12+1] =
-        b[12] * a[1] +
-        b[12+1] * a[5] +
-        b[12+2] * a[9] +
-        b[12+3] * a[13];
-    r[12+2] =
-        b[12] * a[2] +
-        b[12+1] * a[6] +
-        b[12+2] * a[10] +
-        b[12+3] * a[14];
-    r[12+3] =
-        b[12] * a[3] +
-        b[12+1] * a[7] +
-        b[12+2] * a[11] +
-        b[12+3] * a[15];
+    r[0] = b0 * a0 + b1 * a4 + b2 * a8 + b3 * a12;
+    r[1] = b0 * a1 + b1 * a5 + b2 * a9 + b3 * a13;
+    r[2] = b0 * a2 + b1 * a6 + b2 * a10 + b3 * a14;
+    r[3] = b0 * a3 + b1 * a7 + b2 * a11 + b3 * a15;
+    r[4] = b4 * a0 + b5 * a4 + b6 * a8 + b7 * a12;
+    r[5] = b4 * a1 + b5 * a5 + b6 * a9 + b7 * a13;
+    r[6] = b4 * a2 + b5 * a6 + b6 * a10 + b7 * a14;
+    r[7] = b4 * a3 + b5 * a7 + b6 * a11 + b7 * a15;
+    r[8] = b8 * a0 + b9 * a4 + b10 * a8 + b11 * a12;
+    r[9] = b8 * a1 + b9 * a5 + b10 * a9 + b11 * a13;
+    r[10] = b8 * a2 + b9 * a6 + b10 * a10 + b11 * a14;
+    r[11] = b8 * a3 + b9 * a7 + b10 * a11 + b1 * a15;
+    r[12] = b12 * a0 + b13 * a4 + b14 * a8 + b15 * a12;
+    r[13] = b12 * a1 + b13 * a5 + b14 * a9 + b15 * a13;
+    r[14] = b12 * a2 + b13 * a6 + b14 * a10 + b15 * a14;
+    r[15] = b12 * a3 + b13 * a7 + b14 * a11 + b15 * a15;
     return r;
 };
 
