@@ -1,4 +1,3 @@
-/* -*- Mode: js2; js2-basic-offset: 4; indent-tabs-mode: nil; tab-width: 40; -*- */
 /*
  * Copyright (c) 2010 Mozilla Corporation
  * Copyright (c) 2010 Vladimir Vukicevic
@@ -70,7 +69,7 @@ catch (x) {
 const MJS_FLOAT_ARRAY_TYPE = WebGLFloatArray;
 //const MJS_FLOAT_ARRAY_TYPE = Float32Array;
 //const MJS_FLOAT_ARRAY_TYPE = Float64Array;
-//const MJS_FLOAT_ARRAY_TYPE = Array;
+const MJS_FLOAT_ARRAY_TYPE = Array;
 
 if (MJS_DO_ASSERT) {
 function MathUtils_assert(cond, msg) {
@@ -900,8 +899,55 @@ M4x4.rotate = function M4x4_rotate(angle, axis, m, r) {
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
 
-    M4x4.makeRotate(angle, axis, M4x4._temp1);
-    return M4x4.mul(m, M4x4._temp1, r);
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(16);
+
+    var im = 1.0 / V3.length(axis);
+    // Note that multiplying by the reciprocal is not as accurate as dividing (extra rounding).
+    var x = axis[0] * im, y = axis[1] * im, z = axis[2] * im;
+    var c = Math.cos(angle);
+    var c1 = 1-c;
+    var s = Math.sin(angle);
+    var xs = x*s;
+    var ys = y*s;
+    var zs = z*s;
+    var xyc1 = x * y * c1;
+    var xzc1 = x * z * c1;
+    var yzc1 = y * z * c1;
+
+    var t11 = x * x * c1 + c;
+    var t21 = xyc1 + zs;
+    var t31 = xzc1 - ys;
+    var t12 = xyc1 - zs;
+    var t22 = y * y * c1 + c;
+    var t32 = yzc1 + xs;
+    var t13 = xzc1 + ys;
+    var t23 = yzc1 - xs;
+    var t33 = z * z * c1 + c;
+
+    var m11 = m[0], m21 = m[1], m31 = m[2], m41 = m[3];
+    var m12 = m[4], m22 = m[5], m32 = m[6], m42 = m[7];
+    var m13 = m[8], m23 = m[9], m33 = m[10], m43 = m[11];
+    var m14 = m[12], m24 = m[13], m34 = m[14], m44 = m[15];
+
+    r[0] = m11 * t11 + m12 * t21 + m13 * t31;
+    r[1] = m21 * t11 + m22 * t21 + m23 * t31;
+    r[2] = m31 * t11 + m32 * t21 + m33 * t31;
+    r[3] = m41 * t11 + m42 * t21 + m43 * t31;
+    r[4] = m11 * t12 + m12 * t22 + m13 * t32;
+    r[5] = m21 * t12 + m22 * t22 + m23 * t32;
+    r[6] = m31 * t12 + m32 * t22 + m33 * t32;
+    r[7] = m41 * t12 + m42 * t22 + m43 * t32;
+    r[8] = m11 * t13 + m12 * t23 + m13 * t33;
+    r[9] = m21 * t13 + m22 * t23 + m23 * t33;
+    r[10] = m31 * t13 + m32 * t23 + m33 * t33;
+    r[11] = m41 * t13 + m42 * t23 + m43 * t33;
+    r[12] = m14,
+    r[13] = m24;
+    r[14] = m34;
+    r[15] = m44;
+
+    return r;
 };
 
 /*
@@ -999,8 +1045,27 @@ M4x4.scale3 = function M4x4_scale3(x, y, z, m, r) {
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
 
-    M4x4.makeScale3(x, y, z, M4x4._temp1);
-    return M4x4.mul(m, M4x4._temp1, r);
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(16);
+
+    r[0] = m[0] * x;
+    r[1] = m[1] * x;
+    r[2] = m[2] * x;
+    r[3] = m[3] * x;
+    r[4] = m[4] * y;
+    r[5] = m[5] * y;
+    r[6] = m[6] * y;
+    r[7] = m[7] * y;
+    r[8] = m[8] * z;
+    r[9] = m[9] * z;
+    r[10] = m[10] * z;
+    r[11] = m[11] * z;
+    r[12] = m[12];
+    r[13] = m[13];
+    r[14] = m[14];
+    r[15] = m[15];
+
+    return r;
 };
 
 /*
@@ -1010,8 +1075,27 @@ M4x4.scale1 = function M4x4_scale1(k, m, r) {
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
 
-    M4x4.makeScale3(k, k, k, M4x4._temp1);
-    return M4x4.mul(m, M4x4._temp1, r);
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(16);
+
+    r[0] = m[0] * k;
+    r[1] = m[1] * k;
+    r[2] = m[2] * k;
+    r[3] = m[3] * k;
+    r[4] = m[4] * k;
+    r[5] = m[5] * k;
+    r[6] = m[6] * k;
+    r[7] = m[7] * k;
+    r[8] = m[8] * k;
+    r[9] = m[9] * k;
+    r[10] = m[10] * k;
+    r[11] = m[11] * k;
+    r[12] = m[12];
+    r[13] = m[13];
+    r[14] = m[14];
+    r[15] = m[15];
+
+    return r;
 };
 
 /*
@@ -1022,8 +1106,29 @@ M4x4.scale = function M4x4_scale(v, m, r) {
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
 
-    M4x4.makeScale3(v[0], v[1], v[2], M4x4._temp1);
-    return M4x4.mul(m, M4x4._temp1, r);
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(16);
+
+    var x = v[0], y = v[1], z = v[2];
+
+    r[0] = m[0] * x;
+    r[1] = m[1] * x;
+    r[2] = m[2] * x;
+    r[3] = m[3] * x;
+    r[4] = m[4] * y;
+    r[5] = m[5] * y;
+    r[6] = m[6] * y;
+    r[7] = m[7] * y;
+    r[8] = m[8] * z;
+    r[9] = m[9] * z;
+    r[10] = m[10] * z;
+    r[11] = m[11] * z;
+    r[12] = m[12];
+    r[13] = m[13];
+    r[14] = m[14];
+    r[15] = m[15];
+
+    return r;
 };
 
 /*
@@ -1081,8 +1186,36 @@ M4x4.translate3 = function M4x4_translate3 (x, y, z, m, r) {
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
 
-    M4x4.makeTranslate3(x, y, z, M4x4._temp1);
-    return M4x4.mul(m, M4x4._temp1, r);
+    if (r == undefined)
+        r = new MJS_FLOAT_ARRAY_TYPE(16);
+
+    /* It's not clear that copying the whole m matrix into locals here is a win.
+       Computing r[12] through r[15] first, directly from m, and then assigning
+       r[0] through r[11] directly from m *if* r !== m, might be faster. */
+
+    var m11 = m[0], m21 = m[1], m31 = m[2], m41 = m[3];
+    var m12 = m[4], m22 = m[5], m32 = m[6], m42 = m[7];
+    var m13 = m[8], m23 = m[9], m33 = m[10], m43 = m[11];
+    var m14 = m[12], m24 = m[13], m34 = m[14], m44 = m[15],
+
+    r[0] = m11;
+    r[1] = m21;
+    r[2] = m31;
+    r[3] = m41;
+    r[4] = m12;
+    r[5] = m22;
+    r[6] = m32;
+    r[7] = m42;
+    r[8] = m13;
+    r[9] = m23;
+    r[10] = m33;
+    r[11] = m43;
+    r[12] = m11 * x + m12 * y + m13 * z + m14;
+    r[13] = m21 * x + m22 * y + m23 * z + m24;
+    r[14] = m31 * x + m32 * y + m33 * z + m34;
+    r[15] = m41 * x + m42 * y + m43 * z + m44;
+
+    return r;
 };
 
 /*
@@ -1092,8 +1225,7 @@ M4x4.translate1 = function M4x4_translate1 (k, m, r) {
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
 
-    M4x4.makeTranslate3(k, k, k, M4x4._temp1);
-    return M4x4.mul(m, M4x4._temp1, r);
+    return M4x4.translate3(k, k, k, m, r);
 };
 
 /*
@@ -1104,8 +1236,7 @@ M4x4.translate = function M4x4_translate (v, m, r) {
     //MathUtils_assert(m.length == 16, "m.length == 16");
     //MathUtils_assert(r == undefined || r.length == 16, "r == undefined || r.length == 16");
 
-    M4x4.makeTranslate3(v[0], v[1], v[2], M4x4._temp1);
-    return M4x4.mul(m, M4x4._temp1, r);
+    return  M4x4.translate3(v[0], v[1], v[2], m, r);
 };
 
 /*
