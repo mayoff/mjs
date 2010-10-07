@@ -1,0 +1,7 @@
+This is simply a clone of Vladimir Vukićević's mjs library with a few bug fixes and enhancements.  His repository can be found here:
+
+http://code.google.com/p/webgl-mjs/
+
+His blog post describing the library can be found here:
+
+http://blog.vlad1.com/2010/02/05/mjs-simple-vector-and-matrix-math-for-js/
